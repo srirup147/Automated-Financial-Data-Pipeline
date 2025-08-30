@@ -49,7 +49,7 @@ else:
     st.warning("No stock price data available.")
     
 # ------------------ Financial Ratios ------------------
-st.subheader("Index Movement")
+st.subheader("Financial Ratios")
 
 try:
     ratios = compute_ratios(ticker, fallback_url)
