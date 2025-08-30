@@ -50,16 +50,24 @@ else:
     
 # ------------------ Financial Ratios ------------------
 st.subheader("Financial Ratios")
+
 try:
     ratios = compute_ratios(ticker, fallback_url)
+
+    # Debugging: print raw result
+    st.write("DEBUG Raw Ratios:", ratios)
+
     if ratios and isinstance(ratios, dict):
-        df_ratios = pd.DataFrame(list(ratios.items()), columns=["Metric", "Value"])
-        df_ratios["Metric"] = df_ratios["Metric"].str.replace("_", " ")
-        st.dataframe(df_ratios.set_index("Metric"), use_container_width=True)
+        if len(ratios) > 0:
+            df_ratios = pd.DataFrame(list(ratios.items()), columns=["Metric", "Value"])
+            st.dataframe(df_ratios.set_index("Metric"), use_container_width=True)
+        else:
+            st.warning("Ratios dictionary is empty.")
     else:
         st.warning("No ratios available.")
 except Exception as e:
     st.error(f"Error fetching ratios: {e}")
+
 
 
 
