@@ -42,22 +42,27 @@ def get_financials(ticker):
 def get_ratios_yq(ticker):
     try:
         t = Ticker(ticker)
-        key_stats = t.key_metrics.get(ticker, {})
-        if key_stats:
-            ratios = {
-                "ROE": key_stats.get("returnOnEquity", None),
-                "ROCE": key_stats.get("returnOnCapitalEmployed", None),
-                "Debt/Equity": key_stats.get("totalDebt/Equity", None),
-                "P/E": key_stats.get("peRatio", None),
-                "P/B": key_stats.get("pbRatio", None),
-                "EV/EBITDA": key_stats.get("enterpriseValueOverEBITDA", None),
-            }
-            ratios = {k: round(v, 3) for k, v in ratios.items() if v is not None}
-            if ratios:
-                return ratios
+
+        # Use valuation measures + financial data
+        fin = t.financial_data.get(ticker, {})
+        val = t.valuation_measures.get(ticker, {})
+
+        ratios = {
+            "ROE": fin.get("returnOnEquity"),
+            "ROA": fin.get("returnOnAssets"),
+            "Debt/Equity": fin.get("debtToEquity"),
+            "P/E": val.get("peRatio"),
+            "P/B": val.get("pbRatio"),
+            "EV/EBITDA": val.get("enterpriseValueOverEBITDA"),
+        }
+
+        ratios = {k: round(v, 3) for k, v in ratios.items() if v is not None}
+        if ratios:
+            return ratios
     except Exception as e:
         print("Yahooquery error:", e)
     return None
+
 
 def compute_ratios(ticker, fallback_url=None):
     ratios = get_ratios_yq(ticker)
@@ -65,8 +70,9 @@ def compute_ratios(ticker, fallback_url=None):
         return ratios
     elif fallback_url:
         try:
-            import pandas as pd, requests
-            tables = pd.read_html(requests.get(fallback_url, headers={'User-Agent':'Mozilla/5.0'}).text)
+            tables = pd.read_html(
+                requests.get(fallback_url, headers={'User-Agent':'Mozilla/5.0'}).text
+            )
             key_ratios = tables[0]
             return {"Moneycontrol_Ratios": key_ratios.to_dict(orient="records")[:5]}
         except Exception as e:
