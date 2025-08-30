@@ -76,20 +76,45 @@ def compute_ratios(ticker, fallback_url=None):
 # Growth Metrics
 # ------------------
 def compute_growth(ticker):
+    """
+    Compute YoY growth for key metrics using yahooquery.
+    Returns Revenue, Net Income, EPS, Free Cash Flow growth.
+    """
     try:
         t = Ticker(ticker)
         fin = t.all_financial_data().reset_index()
-        fin = fin.pivot(index="asOfDate", columns="periodType", values="TotalRevenue").sort_index()
-        
+
+        if fin.empty:
+            return {"Info": "No financial data available"}
+
+        # Pivot for easier access
+        fin_pivot = fin.pivot(index="asOfDate", columns="periodType", values="TotalRevenue").sort_index()
+        ni_pivot = fin.pivot(index="asOfDate", columns="periodType", values="NetIncome").sort_index()
+        eps_pivot = fin.pivot(index="asOfDate", columns="periodType", values="DilutedEPS").sort_index()
+        fcf_pivot = fin.pivot(index="asOfDate", columns="periodType", values="FreeCashFlow").sort_index()
+
         growth = {}
-        if not fin.empty and fin.shape[0] > 1:
-            growth["Revenue Growth (YoY)"] = round(
-                (fin.iloc[-1, 0] - fin.iloc[-2, 0]) / fin.iloc[-2, 0] * 100, 2
-            )
+
+        def calc_growth(df, label):
+            if not df.empty and df.shape[0] > 1:
+                prev, curr = df.iloc[-2, 0], df.iloc[-1, 0]
+                if prev and prev != 0:
+                    growth[label] = round((curr - prev) / prev * 100, 2)
+
+        # Compute growth for different metrics
+        calc_growth(fin_pivot, "Revenue Growth (YoY)")
+        calc_growth(ni_pivot, "Net Income Growth (YoY)")
+        calc_growth(eps_pivot, "EPS Growth (YoY)")
+        calc_growth(fcf_pivot, "Free Cash Flow Growth (YoY)")
+
+        if not growth:
+            return {"Info": "Growth data not available"}
         return growth
+
     except Exception as e:
         print("Growth calc error:", e)
         return {"Info": "Growth data not available"}
+
 
 # ------------------
 # Stock Screening
