@@ -25,7 +25,7 @@ fallback_url = st.text_input("(Optional) Moneycontrol Ratios URL for the above t
 if st.button("Fetch Data"):
     hist = get_stock_data(ticker)
     if hist is not None and not hist.empty:
-        st.subheader("Stock Price (Last 1 Year)")
+        st.subheader("Stock Price (Last 5 Years)")
         st.line_chart(hist["Close"])
     else:
         st.warning("No stock price data found for this ticker.")
