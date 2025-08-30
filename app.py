@@ -6,8 +6,19 @@ from data_pipeline import fetch_stock_data, get_financials, compute_ratios, comp
 from transcript_analysis import scrape_transcript, analyze_sentiment
 # Page config
 st.set_page_config(page_title="Financial Analysis Dashboard", layout="wide")
-# Page config
-st.set_page_config(page_title="Financial Analysis Dashboard", layout="wide")
+st.markdown(
+    """
+    <style>
+    .block-container {
+        max-width: 900px;   /* narrower content width */
+        margin: auto;       /* centers horizontally */
+        padding-top: 2rem;
+        padding-bottom: 2rem;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
 
 # ---------- PAGE CONFIG ----------
 st.set_page_config(page_title="Financial Analysis Dashboard", layout="wide")
