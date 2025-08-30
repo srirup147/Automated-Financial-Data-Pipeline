@@ -78,9 +78,6 @@ if st.button("Run Screening"):
     if tickers:
         results = screen_stocks(tickers, criteria)
         if not results.empty:
-            st.success(f"{len(results)} stocks matched the criteria")
             st.dataframe(results)
         else:
-            st.warning("No stocks matched the screening criteria.")
-
-
+            st.warning("No data found for given tickers.")
