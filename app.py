@@ -82,16 +82,26 @@ with st.expander("Show Raw Financial Statements (from yfinance)"):
         st.write("Could not fetch raw financials:", e)
 
 # ------------------ Transcript Analysis ------------------
-st.subheader("Earnings Transcript Analysis")
 url = st.text_input("Enter Earnings Transcript URL to analyze (optional)")
 if url:
     text = scrape_transcript(url)
     if text:
         sentiment = analyze_sentiment(text)
-        st.write("**Transcript Sentiment**")
-        st.json(sentiment)
+        st.subheader("Earnings Transcript Sentiment")
+
+        # Show overall sentiment with metric
+        overall = "Positive" if sentiment["compound"] > 0.05 else "Negative" if sentiment["compound"] < -0.05 else "Neutral"
+        st.metric("Overall Sentiment", overall, f"{sentiment['compound']:.2f}")
+
+        # Show bar chart of sentiment breakdown
+        st.write("📊 Sentiment Breakdown")
+        st.bar_chart(pd.DataFrame({
+            "Sentiment": ["Negative", "Neutral", "Positive"],
+            "Score": [sentiment["neg"], sentiment["neu"], sentiment["pos"]]
+        }).set_index("Sentiment"))
     else:
         st.warning("Transcript text could not be extracted.")
+
 
 # ------------------ Stock Screening Tool ------------------
 st.markdown("---")
