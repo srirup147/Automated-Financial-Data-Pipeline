@@ -84,7 +84,7 @@ with st.expander("📑 Show Raw Financial Statements"):
         st.error(f"Could not fetch financials: {e}")
 
 # ---------- EARNINGS TRANSCRIPT ----------
-with st.expander("🎤 Earnings Transcript Analysis"):
+with st.expander("Earnings Transcript Analysis"):
     url = st.text_input("Enter Transcript URL")
     if url:
         text = scrape_transcript(url)
@@ -113,7 +113,7 @@ with st.expander("🎤 Earnings Transcript Analysis"):
 
 # ---------- SCREENING TOOL ----------
 st.markdown("---")
-st.subheader("📌 Stock Screening Tool")
+st.subheader("Stock Screening Tool")
 
 tickers_input = st.text_area("Enter tickers (comma-separated)", "AAPL,MSFT,GOOG,INFY.NS,TCS.NS")
 roe_thresh = st.number_input("ROE threshold (%)", min_value=0.0, max_value=100.0, value=15.0, step=0.5)
