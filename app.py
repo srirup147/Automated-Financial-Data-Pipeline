@@ -18,6 +18,11 @@ st.title("Automated Financial Data Pipeline")
 
 # ------------------ Inputs ------------------
 ticker = st.text_input("Enter Stock Ticker (e.g., TCS.NS, INFY.NS)", "AAPL")
+fallback_url = st.text_input(
+    "(Optional) Moneycontrol Ratios URL for the above ticker",
+    "https://www.moneycontrol.com/financials/tcs-ratiosVI/TCS"
+)
+
 
 # ------------------ Stock Price Section ------------------
 st.subheader("Stock Price History")
