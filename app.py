@@ -29,6 +29,27 @@ if st.button("Fetch Data"):
         st.line_chart(hist["Close"])
     else:
         st.warning("No stock price data found for this ticker.")
+import plotly.graph_objs as go
+
+if not df.empty:
+    st.subheader(f"📈 {ticker} - 5 Year Candlestick Chart")
+    fig = go.Figure(data=[go.Candlestick(
+        x=df['Date'],
+        open=df['Open'],
+        high=df['High'],
+        low=df['Low'],
+        close=df['Close'],
+        name='Candlestick'
+    )])
+    fig.update_layout(
+        xaxis_rangeslider_visible=False,
+        template="plotly_dark",
+        title=f"{ticker} Stock Price (5Y)"
+    )
+    st.plotly_chart(fig, use_container_width=True)
+else:
+    st.warning("No stock price data available.")
+
 
     st.subheader("Financial Ratios")
     ratios = compute_ratios(ticker, fallback_url)
