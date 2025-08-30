@@ -99,10 +99,20 @@ if url:
 # Show bar chart of sentiment breakdown
 st.write("Sentiment Breakdown")
 
+import plotly.express as px
+
+# Sentiment DataFrame
 sent_df = pd.DataFrame({
     "Sentiment": ["Negative", "Neutral", "Positive"],
     "Score": [sentiment["neg"], sentiment["neu"], sentiment["pos"]]
 })
+
+# Custom colors
+color_map = {
+    "Negative": "red",
+    "Neutral": "steelblue",   # calm blue
+    "Positive": "green"
+}
 
 fig = px.bar(
     sent_df,
@@ -110,11 +120,19 @@ fig = px.bar(
     y="Score",
     color="Sentiment",
     text="Score",
+    color_discrete_map=color_map,
     width=500,
     height=300
 )
 
-fig.update_traces(marker_line_width=1.2, marker_line_color="black", width=0.3, texttemplate='%{text:.2f}', textposition="outside")
+fig.update_traces(
+    marker_line_width=1.2,
+    marker_line_color="black",
+    width=0.3,
+    texttemplate='%{text:.2f}',
+    textposition="outside"
+)
+
 fig.update_layout(
     template="plotly_white",
     yaxis=dict(range=[0, 1], title="Proportion"),
