@@ -7,7 +7,7 @@ from transcript_analysis import scrape_transcript, analyze_sentiment
 
 # ---------- PAGE CONFIG ----------
 st.set_page_config(page_title="Financial Analysis Dashboard", layout="wide")
-st.title("📊 Automated Financial Data Pipeline")
+st.title("Automated Financial Data Pipeline")
 
 # ---------- USER INPUT ----------
 col1, col2 = st.columns([2, 3])
@@ -36,7 +36,7 @@ else:
     st.warning("No stock price data available.")
 
 # ---------- RATIOS ----------
-st.subheader("📌 Key Financial Ratios")
+st.subheader("Key Financial Ratios")
 ratios = compute_ratios(ticker, fallback_url)
 if ratios and isinstance(ratios, dict):
     col1, col2, col3 = st.columns(3)
@@ -51,7 +51,7 @@ else:
     st.warning("No ratios available.")
 
 # ---------- GROWTH ----------
-st.subheader("📈 Growth Metrics")
+st.subheader("Growth Metrics")
 growth = compute_growth(ticker)
 if growth:
     growth_df = pd.DataFrame(list(growth.items()), columns=["Metric", "Value"])
