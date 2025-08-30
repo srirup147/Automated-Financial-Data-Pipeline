@@ -9,7 +9,7 @@ from data_pipeline import (
 from transcript_analysis import scrape_transcript, analyze_sentiment
 
 st.set_page_config(page_title="Automated Financial Data Pipeline", layout="wide")
-st.title("📊 Automated Financial Data Pipeline")
+st.title("Automated Financial Data Pipeline")
 
 # -----------------------
 # Input Section
@@ -68,7 +68,7 @@ if st.button("Fetch Data"):
 # Screening Tool
 # -----------------------
 st.markdown("---")
-st.subheader("📌 Stock Screening Tool (Demo)")
+st.subheader("Stock Screening Tool (Demo)")
 
 tickers_input = st.text_area("Enter tickers (comma-separated)", "AAPL,MSFT,GOOG")
 criteria = {"ROE": 0.15, "Debt/Equity": 1.0}
