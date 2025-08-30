@@ -88,7 +88,8 @@ if st.button("Run Screening"):
     if not tickers:
         st.warning("Please enter at least one ticker.")
     else:
-        df = screen_stocks(tickers, criteria=criteria, fallback_url_map=fallback_map)
+        df = screen_stocks(tickers, criteria=criteria)
+
         if df.empty:
             st.warning("No data returned for the tickers.")
         else:
