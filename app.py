@@ -42,8 +42,7 @@ if not df.empty:
     st.plotly_chart(fig, use_container_width=True)
 else:
     st.warning("No stock price data available.")
-
-# ------------------ Financial Ratios ------------------
+    
 # ------------------ Financial Ratios ------------------
 st.subheader("Financial Ratios")
 
