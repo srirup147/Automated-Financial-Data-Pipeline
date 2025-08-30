@@ -1,4 +1,8 @@
 # app.py
+import os
+print("CWD:", os.getcwd())
+print("Files:", os.listdir("."))
+
 import streamlit as st
 from data_pipeline import (
     get_stock_data,
