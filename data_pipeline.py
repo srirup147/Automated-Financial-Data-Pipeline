@@ -6,9 +6,9 @@ import requests
 # ------------------
 # Stock Price Fetcher
 # ------------------
-def fetch_stock_data(ticker, period="1y", interval="1d"):
+def fetch_stock_data(ticker, period="5y", interval="1d"):
     """
-    Fetch stock price history using yfinance.
+    Fetch stock price history using yfinance (default 5 years daily data).
     """
     try:
         stock = yf.Ticker(ticker)
@@ -19,6 +19,7 @@ def fetch_stock_data(ticker, period="1y", interval="1d"):
         return df
     except Exception as e:
         return pd.DataFrame({"Error": [str(e)]})
+
 
 # ------------------
 # Financials
