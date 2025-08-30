@@ -1,5 +1,8 @@
 import yfinance as yf
 import pandas as pd
+from yahooquery import Ticker
+import requests
+from bs4 import BeautifulSoup
 
 def get_stock_data(ticker, period="1y"):
     stock = yf.Ticker(ticker)
@@ -11,12 +14,6 @@ def get_financials(ticker):
     balance_sheet = stock.balance_sheet
     income_stmt = stock.financials
     return balance_sheet, income_stmt
-
-import yfinance as yf
-import pandas as pd
-from yahooquery import Ticker
-import requests
-from bs4 import BeautifulSoup
 
 # ------------------
 # Primary: Yahooquery
