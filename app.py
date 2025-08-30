@@ -5,12 +5,12 @@ print("Files:", os.listdir("."))
 
 import streamlit as st
 from data_pipeline import (
-    get_stock_data,
+    fetch_stock_data as get_stock_data,
     get_financials,
     compute_ratios,
-    compute_growth,
     screen_stocks
 )
+
 from transcript_analysis import scrape_transcript, analyze_sentiment
 import pandas as pd
 
