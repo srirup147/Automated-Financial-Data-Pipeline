@@ -22,17 +22,13 @@ ticker = st.text_input("Enter Stock Ticker (e.g., TCS.NS, INFY.NS, AAPL)", "AAPL
 fallback_url = st.text_input("(Optional) Moneycontrol Ratios URL for the above ticker",
                              "https://www.moneycontrol.com/financials/tcs-ratiosVI/TCS")
 
-if st.button("Fetch Data"):
-    hist = get_stock_data(ticker)
-    if hist is not None and not hist.empty:
-        st.subheader("Stock Price (Last 5 Years)")
-        st.line_chart(hist["Close"])
-    else:
-        st.warning("No stock price data found for this ticker.")
-import plotly.graph_objs as go
+# Fetch stock price history
+df = get_stock_data(ticker, period="5y", interval="1d")
 
 if not df.empty:
     st.subheader(f"📈 {ticker} - 5 Year Candlestick Chart")
+    import plotly.graph_objs as go
+
     fig = go.Figure(data=[go.Candlestick(
         x=df['Date'],
         open=df['Open'],
@@ -49,6 +45,7 @@ if not df.empty:
     st.plotly_chart(fig, use_container_width=True)
 else:
     st.warning("No stock price data available.")
+
 
 
     st.subheader("Financial Ratios")
