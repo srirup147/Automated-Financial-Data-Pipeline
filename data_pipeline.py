@@ -80,26 +80,31 @@ def screen_stocks(tickers, criteria={"ROE": 0.15, "Debt/Equity": 1.0}):
             continue
 
         passed = True
+        reasons = []
         for metric, threshold in criteria.items():
             value = ratios.get(metric, None)
             if value is None:
+                reasons.append(f"{metric}: Missing")
                 passed = False
-                break
-            # Rule: if metric is ROE/ROCE/Revenue Growth → want HIGH (> threshold)
-            if metric in ["ROE", "ROCE", "Revenue Growth (YoY)"]:
+                continue
+
+            # Rule: if metric is ROE/ROCE → want HIGH
+            if metric in ["ROE", "ROCE"]:
                 if value < threshold:
+                    reasons.append(f"{metric}: {value} < {threshold}")
                     passed = False
-                    break
-            # Rule: if metric is Debt/Equity → want LOW (< threshold)
+            # Rule: if metric is Debt/Equity → want LOW
             elif metric == "Debt/Equity":
                 if value > threshold:
-                    passed = False
-                    break
+                    reasons.append(f"{metric}: {value} > {threshold}")
 
         if passed:
-            results.append({"Ticker": tkr, **ratios})
+            results.append({"Ticker": tkr, **ratios, "Status": "PASS"})
+        else:
+            results.append({"Ticker": tkr, **ratios, "Status": "FAIL", "Reason": "; ".join(reasons)})
 
     return pd.DataFrame(results)
+
 
 
 # ------------------
