@@ -4,6 +4,35 @@ import plotly.graph_objs as go
 import plotly.express as px
 from data_pipeline import fetch_stock_data, get_financials, compute_ratios, compute_growth, screen_stocks
 from transcript_analysis import scrape_transcript, analyze_sentiment
+# Custom CSS for styling
+st.markdown(
+    <style>
+    /* Set full page background color */
+    .stApp {
+        background-color: #f5f7fa;  /* Light gray background */
+        color: #1f2937; /* Dark text for readability */
+    }
+
+    /* Center content */
+    .block-container {
+        max-width: 900px; /* narrower width */
+        margin: auto;
+        padding-top: 2rem;
+        padding-bottom: 2rem;
+    }
+
+    /* Style metric cards */
+    [data-testid="stMetric"] {
+        background: white;
+        padding: 15px;
+        border-radius: 12px;
+        box-shadow: 0px 2px 6px rgba(0,0,0,0.1);
+    }
+    </style>
+    ,
+    unsafe_allow_html=True
+)
+
 
 # ---------- PAGE CONFIG ----------
 st.set_page_config(page_title="Financial Analysis Dashboard", layout="wide")
