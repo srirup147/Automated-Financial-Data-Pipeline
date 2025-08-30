@@ -94,13 +94,36 @@ if url:
         st.metric("Overall Sentiment", overall, f"{sentiment['compound']:.2f}")
 
         # Show bar chart of sentiment breakdown
-        st.write("📊 Sentiment Breakdown")
-        st.bar_chart(pd.DataFrame({
-            "Sentiment": ["Negative", "Neutral", "Positive"],
-            "Score": [sentiment["neg"], sentiment["neu"], sentiment["pos"]]
-        }).set_index("Sentiment"))
-    else:
-        st.warning("Transcript text could not be extracted.")
+        import plotly.express as px
+
+# Show bar chart of sentiment breakdown
+st.write("Sentiment Breakdown")
+
+sent_df = pd.DataFrame({
+    "Sentiment": ["Negative", "Neutral", "Positive"],
+    "Score": [sentiment["neg"], sentiment["neu"], sentiment["pos"]]
+})
+
+fig = px.bar(
+    sent_df,
+    x="Sentiment",
+    y="Score",
+    color="Sentiment",
+    text="Score",
+    width=500,
+    height=300
+)
+
+fig.update_traces(marker_line_width=1.2, marker_line_color="black", width=0.3, texttemplate='%{text:.2f}', textposition="outside")
+fig.update_layout(
+    template="plotly_white",
+    yaxis=dict(range=[0, 1], title="Proportion"),
+    xaxis=dict(title=""),
+    showlegend=False
+)
+
+st.plotly_chart(fig, use_container_width=False)
+
 
 
 # ------------------ Stock Screening Tool ------------------
