@@ -73,7 +73,7 @@ except Exception as e:
     st.error(f"Error fetching growth metrics: {e}")
 
 # ------------------ Raw Financial Statements ------------------
-with st.expander("📑 Show Raw Financial Statements (from yfinance)"):
+with st.expander("Show Raw Financial Statements (from yfinance)"):
     try:
         bs, inc = get_financials(ticker)
         st.write("**Balance Sheet**")
@@ -97,7 +97,7 @@ if url:
 
 # ------------------ Stock Screening Tool ------------------
 st.markdown("---")
-st.subheader("📌 Stock Screening Tool")
+st.subheader("Stock Screening Tool")
 
 tickers_input = st.text_area("Enter tickers (comma-separated)", "AAPL,MSFT,GOOG,INFY.NS,TCS.NS")
 col1, col2 = st.columns(2)
@@ -121,13 +121,13 @@ if st.button("Run Screening"):
                 df_pass = df_screen[df_screen["Status"] == "PASS"]
                 df_fail = df_screen[df_screen["Status"] != "PASS"]
 
-                st.write(f"✅ Matched: {len(df_pass)}  |  ❌ Failed: {len(df_fail)}")
+                st.write(f"Matched: {len(df_pass)}  |  Failed: {len(df_fail)}")
 
                 if not df_pass.empty:
-                    st.subheader("✅ Passed Stocks")
+                    st.subheader("Passed Stocks")
                     st.dataframe(df_pass.reset_index(drop=True))
                 if not df_fail.empty:
-                    st.subheader("❌ Failed Stocks (with reasons)")
+                    st.subheader("Failed Stocks (with reasons)")
                     st.dataframe(df_fail.reset_index(drop=True))
             else:
                 st.dataframe(df_screen)
