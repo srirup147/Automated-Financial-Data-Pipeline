@@ -4,17 +4,6 @@ from yahooquery import Ticker
 import requests
 from bs4 import BeautifulSoup
 
-def get_stock_data(ticker, period="1y"):
-    stock = yf.Ticker(ticker)
-    hist = stock.history(period=period)
-    return hist
-
-def get_financials(ticker):
-    stock = yf.Ticker(ticker)
-    balance_sheet = stock.balance_sheet
-    income_stmt = stock.financials
-    return balance_sheet, income_stmt
-
 # ------------------
 # Primary: Yahooquery
 # ------------------
