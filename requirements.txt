@@ -1,0 +1,8 @@
+yfinance
+pandas
+matplotlib
+seaborn
+requests
+beautifulsoup4
+streamlit
+vaderSentiment
