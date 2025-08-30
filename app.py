@@ -44,7 +44,9 @@ else:
     st.warning("No stock price data available.")
 
 # ------------------ Financial Ratios ------------------
-st.subheader("Index Movement")
+# ------------------ Financial Ratios ------------------
+st.subheader("Financial Ratios")
+
 try:
     ratios = compute_ratios(ticker, fallback_url)
     if ratios:
@@ -53,6 +55,7 @@ try:
         st.warning("No ratios available.")
 except Exception as e:
     st.error(f"Error fetching ratios: {e}")
+
 
 # ------------------ Growth Metrics ------------------
 st.subheader("Growth Metrics")
