@@ -5,7 +5,12 @@ import plotly.express as px
 from data_pipeline import fetch_stock_data, get_financials, compute_ratios, compute_growth, screen_stocks
 from transcript_analysis import scrape_transcript, analyze_sentiment
 # Custom CSS for styling
+# Page config
+st.set_page_config(page_title="Financial Analysis Dashboard", layout="wide")
+
+# Custom CSS for background + centralize page
 st.markdown(
+    """
     <style>
     /* Set full page background color */
     .stApp {
@@ -29,10 +34,12 @@ st.markdown(
         box-shadow: 0px 2px 6px rgba(0,0,0,0.1);
     }
     </style>
-    ,
+    """,
     unsafe_allow_html=True
 )
 
+# Page config
+st.set_page_config(page_title="Financial Analysis Dashboard", layout="wide")
 
 # ---------- PAGE CONFIG ----------
 st.set_page_config(page_title="Financial Analysis Dashboard", layout="wide")
