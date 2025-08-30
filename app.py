@@ -68,7 +68,7 @@ if st.button("Fetch Data"):
 # Screening Tool
 # -----------------------
 st.markdown("---")
-st.subheader("Stock Screening Tool (Demo)")
+st.subheader("Stock Screening Tool")
 
 tickers_input = st.text_area("Enter tickers (comma-separated)", "AAPL,MSFT,GOOG")
 criteria = {"ROE": 0.15, "Debt/Equity": 1.0}
