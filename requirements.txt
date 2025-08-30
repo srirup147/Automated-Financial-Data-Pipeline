@@ -1,9 +1,9 @@
+streamlit
 yfinance
+yahooquery
 pandas
-matplotlib
-seaborn
+numpy
 requests
 beautifulsoup4
-streamlit
+lxml
 vaderSentiment
-yahooquery
