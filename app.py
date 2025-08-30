@@ -8,6 +8,7 @@ from data_pipeline import (
     fetch_stock_data as get_stock_data,
     get_financials,
     compute_ratios,
+    compute_growth,
     screen_stocks
 )
 
