@@ -15,15 +15,22 @@ def get_financials(ticker):
 def compute_ratios(income_stmt, balance_sheet):
     ratios = {}
     try:
-        net_income = income_stmt.loc["Net Income"].iloc[0]
-        equity = balance_sheet.loc["Total Stockholder Equity"].iloc[0]
-        ebit = income_stmt.loc["Ebit"].iloc[0]
-        total_assets = balance_sheet.loc["Total Assets"].iloc[0]
-        total_liabilities = balance_sheet.loc["Total Liab"].iloc[0]
+        income_stmt.index = income_stmt.index.str.lower()
+        balance_sheet.index = balance_sheet.index.str.lower()
+        net_income = income_stmt.loc["net income", :].iloc[0] if "net income" in income_stmt.index else None
+        equity = balance_sheet.loc["total stockholder equity", :].iloc[0] if "total stockholder equity" in balance_sheet.index else None
+        ebit = income_stmt.loc["ebit", :].iloc[0] if "ebit" in income_stmt.index else None
+        total_assets = balance_sheet.loc["total assets", :].iloc[0] if "total assets" in balance_sheet.index else None
+        total_liabilities = balance_sheet.loc["total liab", :].iloc[0] if "total liab" in balance_sheet.index else None
+        if net_income and equity:
+            ratios["ROE"] = round(net_income / equity, 3)
+        if ebit and total_assets and total_liabilities:
+            ratios["ROCE"] = round(ebit / (total_assets - total_liabilities), 3)
+        if total_liabilities and equity:
+            ratios["Debt/Equity"] = round(total_liabilities / equity, 3)
 
-        ratios["ROE"] = round(net_income / equity, 3)
-        ratios["ROCE"] = round(ebit / (total_assets - total_liabilities), 3)
-        ratios["Debt/Equity"] = round(total_liabilities / equity, 3)
-    except Exception:
-        pass
-    return ratios
+    except Exception as e:
+        print("Error computing ratios:", e)
+
+    return ratios if ratios else {"Info": "Ratios not available for this ticker"}
+
