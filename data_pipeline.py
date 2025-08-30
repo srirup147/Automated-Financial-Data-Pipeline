@@ -78,15 +78,29 @@ def screen_stocks(tickers, criteria={"ROE": 0.15, "Debt/Equity": 1.0}):
         ratios = get_ratios_yq(tkr)
         if not ratios:
             continue
+
         passed = True
-        for k,v in criteria.items():
-            if k in ratios and ratios[k] > v if k=="ROE" else ratios[k] < v:
-                continue
-            else:
+        for metric, threshold in criteria.items():
+            value = ratios.get(metric, None)
+            if value is None:
                 passed = False
+                break
+            # Rule: if metric is ROE/ROCE/Revenue Growth → want HIGH (> threshold)
+            if metric in ["ROE", "ROCE", "Revenue Growth (YoY)"]:
+                if value < threshold:
+                    passed = False
+                    break
+            # Rule: if metric is Debt/Equity → want LOW (< threshold)
+            elif metric == "Debt/Equity":
+                if value > threshold:
+                    passed = False
+                    break
+
         if passed:
             results.append({"Ticker": tkr, **ratios})
+
     return pd.DataFrame(results)
+
 
 # ------------------
 # Stock Data
