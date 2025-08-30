@@ -52,10 +52,10 @@ def get_ratios_yq(ticker):
         stats = t.key_stats.get(ticker, {})
 
         ratios = {
-            "ROE": fin.get("returnOnEquity"),
+            "ROE (%)": fin.get("returnOnEquity") * 100 if fin.get("returnOnEquity") else None,
             "EPS": stats.get("trailingEps"),
             "P/E": stats.get("trailingPE"),
-            "Dividend Yield": summary.get("dividendYield"),
+            "Dividend Yield (%)": summary.get("dividendYield") * 100 if summary.get("dividendYield") else None,
         }
 
         # Try to compute ROCE = EBIT / (Total Assets - Current Liabilities)
@@ -64,13 +64,13 @@ def get_ratios_yq(ticker):
             ebit = fin_stmt.loc[(ticker, slice(None)), "EBIT"].iloc[0]
             total_assets = fin_stmt.loc[(ticker, slice(None)), "TotalAssets"].iloc[0]
             curr_liab = fin_stmt.loc[(ticker, slice(None)), "CurrentLiabilities"].iloc[0]
-            roce = ebit / (total_assets - curr_liab)
-            ratios["ROCE"] = round(roce, 3)
+            roce = (ebit / (total_assets - curr_liab)) * 100
+            ratios["ROCE (%)"] = round(roce, 2)
         except Exception as e:
             print("ROCE calc failed:", e)
 
-        # Round numbers
-        ratios = {k: round(v, 3) for k, v in ratios.items() if v is not None}
+        # Round everything
+        ratios = {k: round(v, 2) for k, v in ratios.items() if v is not None}
         if ratios:
             return ratios
     except Exception as e:
@@ -89,7 +89,7 @@ def compute_ratios(ticker, fallback_url=None):
                 )
                 for table in tables:
                     if "Industry P/E" in table.to_string():
-                        ind_pe = table.iloc[:,1].astype(str).str.extract(r"([\d\.]+)").dropna().values[0][0]
+                        ind_pe = table.iloc[:, 1].astype(str).str.extract(r"([\d\.]+)").dropna().values[0][0]
                         ratios["Industry P/E"] = float(ind_pe)
                         break
             except Exception as e:
