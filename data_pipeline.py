@@ -39,23 +39,37 @@ def get_financials(ticker):
 # ------------------
 # Ratios (Yahooquery + fallback)
 # ------------------
+from yahooquery import Ticker
+import pandas as pd, requests
+
 def get_ratios_yq(ticker):
     try:
         t = Ticker(ticker)
 
-        # Use valuation measures + financial data
+        # Yahoo Finance data
         fin = t.financial_data.get(ticker, {})
-        val = t.valuation_measures.get(ticker, {})
+        summary = t.summary_detail.get(ticker, {})
+        stats = t.key_stats.get(ticker, {})
 
         ratios = {
             "ROE": fin.get("returnOnEquity"),
-            "ROA": fin.get("returnOnAssets"),
-            "Debt/Equity": fin.get("debtToEquity"),
-            "P/E": val.get("peRatio"),
-            "P/B": val.get("pbRatio"),
-            "EV/EBITDA": val.get("enterpriseValueOverEBITDA"),
+            "EPS": stats.get("trailingEps"),
+            "P/E": stats.get("trailingPE"),
+            "Dividend Yield": summary.get("dividendYield"),
         }
 
+        # Try to compute ROCE = EBIT / (Total Assets - Current Liabilities)
+        try:
+            fin_stmt = t.all_financial_data(ticker)
+            ebit = fin_stmt.loc[(ticker, slice(None)), "EBIT"].iloc[0]
+            total_assets = fin_stmt.loc[(ticker, slice(None)), "TotalAssets"].iloc[0]
+            curr_liab = fin_stmt.loc[(ticker, slice(None)), "CurrentLiabilities"].iloc[0]
+            roce = ebit / (total_assets - curr_liab)
+            ratios["ROCE"] = round(roce, 3)
+        except Exception as e:
+            print("ROCE calc failed:", e)
+
+        # Round numbers
         ratios = {k: round(v, 3) for k, v in ratios.items() if v is not None}
         if ratios:
             return ratios
@@ -67,6 +81,19 @@ def get_ratios_yq(ticker):
 def compute_ratios(ticker, fallback_url=None):
     ratios = get_ratios_yq(ticker)
     if ratios:
+        # If Industry P/E is missing, try fallback
+        if fallback_url:
+            try:
+                tables = pd.read_html(
+                    requests.get(fallback_url, headers={'User-Agent':'Mozilla/5.0'}).text
+                )
+                for table in tables:
+                    if "Industry P/E" in table.to_string():
+                        ind_pe = table.iloc[:,1].astype(str).str.extract(r"([\d\.]+)").dropna().values[0][0]
+                        ratios["Industry P/E"] = float(ind_pe)
+                        break
+            except Exception as e:
+                ratios["Industry P/E"] = f"Error: {e}"
         return ratios
     elif fallback_url:
         try:
@@ -79,6 +106,7 @@ def compute_ratios(ticker, fallback_url=None):
             return {"Error": f"Moneycontrol scrape failed: {str(e)}"}
     else:
         return {"Info": "Ratios not available for this ticker"}
+
 # ------------------
 # Growth Metrics
 # ------------------
