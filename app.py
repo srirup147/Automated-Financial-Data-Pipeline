@@ -50,15 +50,17 @@ else:
     
 # ------------------ Financial Ratios ------------------
 st.subheader("Financial Ratios")
-
 try:
     ratios = compute_ratios(ticker, fallback_url)
-    if ratios:
-        st.table(pd.DataFrame(ratios.items(), columns=["Metric", "Value"]))
+    if ratios and isinstance(ratios, dict):
+        df_ratios = pd.DataFrame(list(ratios.items()), columns=["Metric", "Value"])
+        df_ratios["Metric"] = df_ratios["Metric"].str.replace("_", " ")
+        st.dataframe(df_ratios.set_index("Metric"), use_container_width=True)
     else:
         st.warning("No ratios available.")
 except Exception as e:
     st.error(f"Error fetching ratios: {e}")
+
 
 
 # ------------------ Growth Metrics ------------------
