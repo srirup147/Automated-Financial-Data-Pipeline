@@ -14,19 +14,15 @@ from transcript_analysis import scrape_transcript, analyze_sentiment
 
 # ------------------ Streamlit Page Config ------------------
 st.set_page_config(page_title="Automated Financial Data Pipeline", layout="wide")
-st.title("📊 Automated Financial Data Pipeline")
+st.title("Automated Financial Data Pipeline")
 
 # ------------------ Inputs ------------------
-ticker = st.text_input("Enter Stock Ticker (e.g., TCS.NS, INFY.NS, AAPL)", "AAPL")
-fallback_url = st.text_input(
-    "(Optional) Moneycontrol Ratios URL for the above ticker",
-    "https://www.moneycontrol.com/financials/tcs-ratiosVI/TCS"
-)
+ticker = st.text_input("Enter Stock Ticker (e.g., TCS.NS, INFY.NS)", "AAPL")
 
 # ------------------ Stock Price Section ------------------
 st.subheader("Stock Price History")
 
-period_choice = st.selectbox("Select Time Period", ["1y", "5y", "max"], index=1)
+period_choice = st.selectbox("Select Time Period", ["1y","3y", "5y", "max"], index=1)
 df = get_stock_data(ticker, period=period_choice, interval="1d")
 
 if not df.empty:
@@ -48,7 +44,7 @@ else:
     st.warning("No stock price data available.")
 
 # ------------------ Financial Ratios ------------------
-st.subheader("Financial Ratios")
+st.subheader("Index Movement")
 try:
     ratios = compute_ratios(ticker, fallback_url)
     if ratios:
