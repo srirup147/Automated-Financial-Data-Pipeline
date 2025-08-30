@@ -58,13 +58,20 @@ def get_ratios_yq(ticker):
         print("Yahooquery error:", e)
     return None
 
-def compute_ratios(ticker):
+def compute_ratios(ticker, fallback_url=None):
     ratios = get_ratios_yq(ticker)
     if ratios:
         return ratios
+    elif fallback_url:
+        try:
+            import pandas as pd, requests
+            tables = pd.read_html(requests.get(fallback_url, headers={'User-Agent':'Mozilla/5.0'}).text)
+            key_ratios = tables[0]
+            return {"Moneycontrol_Ratios": key_ratios.to_dict(orient="records")[:5]}
+        except Exception as e:
+            return {"Error": f"Moneycontrol scrape failed: {str(e)}"}
     else:
         return {"Info": "Ratios not available for this ticker"}
-
 # ------------------
 # Growth Metrics
 # ------------------
