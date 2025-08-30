@@ -70,14 +70,17 @@ if st.button("Fetch Data"):
 st.markdown("---")
 st.subheader("Stock Screening Tool")
 
-tickers_input = st.text_area("Enter tickers (comma-separated)", "AAPL,MSFT,GOOG")
+tickers_input = st.text_area("Enter tickers (comma-separated)", "AAPL,MSFT,GOOG,INFY.NS,TCS.NS")
 criteria = {"ROE": 0.15, "Debt/Equity": 1.0}
 
 if st.button("Run Screening"):
-    tickers = [t.strip() for t in tickers_input.split(",")]
-    results = screen_stocks(tickers, criteria)
-    if not results.empty:
-        st.dataframe(results)
-    else:
-        st.warning("No stocks matched the screening criteria.")
+    tickers = [t.strip() for t in tickers_input.split(",") if t.strip()]
+    if tickers:
+        results = screen_stocks(tickers, criteria)
+        if not results.empty:
+            st.success(f"{len(results)} stocks matched the criteria")
+            st.dataframe(results)
+        else:
+            st.warning("No stocks matched the screening criteria.")
+
 
